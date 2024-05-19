@@ -47,3 +47,6 @@ class Usuario:
     
     def tem_livro(self):
         return len(self.livros) > 0
+    
+
+
