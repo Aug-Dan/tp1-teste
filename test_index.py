@@ -4,13 +4,14 @@ from class_livro import Livro
 """
 @pytest.fixture
 def usuario_padrao():
-    return Usuario(0, "Usuário Padrão")
+    return Usuario(1001, "Usuário Padrão")
 """
+
 def test_usuario_criacao():
-    #tentativa de criar um usuário com um ID duplicado
-    usuario = Usuario(1, "João")
+
+    usuario = Usuario(1, "Usuário Padrão")
     assert usuario.get_id() == 1
-    assert usuario.get_nome() == "João"
+    assert usuario.get_nome() == "Usuário Padrão"
 
     with pytest.raises(ValueError):
         Usuario(1, "Maria")  
