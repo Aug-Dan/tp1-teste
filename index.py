@@ -2,7 +2,7 @@ class Livro:
     _ids_existentes = set()
 
     def __init__(self, nome, id, em_estoque=True):
-        if id in Livro._ids_existentes:
+        if id in Livro._ids_existentes and id != 0:
             raise ValueError("ID já existe. Por favor, use um ID único.")
         self.nome = nome
         self.id = id
@@ -13,7 +13,7 @@ class Usuario:
     _ids_existentes = set()
 
     def __init__(self, id, nome=""):
-        if id in Usuario._ids_existentes:
+        if id in Usuario._ids_existentes and id != 0:
             raise ValueError("ID já existe. Por favor, use um ID único.")
         self.id = id
         self.nome = nome

@@ -1,5 +1,9 @@
 import pytest
 from index import Livro, Usuario
+"""
+@pytest.fixture
+def usuario_padrao():
+    return Usuario(999, "Usuário Padrão")"""
 
 def test_usuario_criacao():
     #tentativa de criar um usuário com um ID duplicado
@@ -64,13 +68,32 @@ def test_verifica_usuario_com_livro():
     usuario = Usuario(6,"Felipe") 
     assert not usuario.tem_livro()
 
-    livro1 = Livro("titulo", 111)
+    livro1 = Livro("titulo", 107)
     usuario.adiciona_livro(livro1)
     assert usuario.tem_livro()
 
-    usuario.remover_livro(111) 
+    usuario.remover_livro(107) 
     assert not usuario.tem_livro()
 
+def test_verifica_varios_ids_usuario():
+    #verifica se é possível criar vários usuarios com id 0 
+    usuario1 = Usuario(0,"felipe0")
+    usuario2 = Usuario(0,"felipe1")
+    usuario3 = Usuario(0,"felipe2")
+    usuario4 = Usuario(0,"felipe3")
+    assert isinstance(usuario1, Usuario) 
+    assert isinstance(usuario2, Usuario)
+    assert isinstance(usuario3, Usuario)
+    assert isinstance(usuario4, Usuario)
 
+def test_verifica_varios_ids_livro():
+    #verifica se é possível criar vários livros com id 0 
+
+    livro1 = Livro("titulo1", 0) 
+    livro2 = Livro("titulo2", 0)
+    livro3 = Livro("titulo3", 0)
+    assert isinstance(livro1, Livro) 
+    assert isinstance(livro3, Livro)
+    assert isinstance(livro2, Livro)
 if __name__ == "__main__":
     pytest.main()
