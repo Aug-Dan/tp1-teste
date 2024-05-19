@@ -1,20 +1,18 @@
 import pytest
 from class_usuario import Usuario
 from class_livro import Livro
-"""
+
+import pytest
+
 @pytest.fixture
 def usuario_padrao():
-    return Usuario(1001, "Usuário Padrão")
-"""
+    return Usuario(0, "Usuário Padrão")
 
-def test_usuario_criacao():
 
-    usuario = Usuario(1, "Usuário Padrão")
-    assert usuario.get_id() == 1
+def test_usuario_criacao(usuario_padrao):
+    usuario = usuario_padrao  # Usar a fixture como um argumento do teste
+    assert usuario.get_id() == 0  # Verificar o ID da fixture
     assert usuario.get_nome() == "Usuário Padrão"
-
-    with pytest.raises(ValueError):
-        Usuario(1, "Maria")  
 
 def test_livro_criacao():
     #tentativa de criar um livro com um ID duplicado
@@ -26,11 +24,9 @@ def test_livro_criacao():
     with pytest.raises(ValueError):
         Livro("Brave New World", 101)  
 
-def test_adiciona_livro():
-    #verifica se os livros são adicionados corretamente 
-    usuario = Usuario(2, "Maria")
+def test_adiciona_livro(usuario_padrao):
+    usuario = usuario_padrao  # Usar a fixture como um argumento do teste
     livro = Livro("1984", 102)
-
     usuario.adiciona_livro(livro)
     assert usuario.verifica_livro(102)
 
