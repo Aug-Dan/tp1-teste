@@ -1,5 +1,6 @@
 import pytest
-from index import Livro, Usuario
+from class_usuario import Usuario
+from class_livro import Livro
 """
 @pytest.fixture
 def usuario_padrao():
