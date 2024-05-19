@@ -4,8 +4,8 @@ from class_livro import Livro
 """
 @pytest.fixture
 def usuario_padrao():
-    return Usuario(999, "Usuário Padrão")"""
-
+    return Usuario(0, "Usuário Padrão")
+"""
 def test_usuario_criacao():
     #tentativa de criar um usuário com um ID duplicado
     usuario = Usuario(1, "João")
