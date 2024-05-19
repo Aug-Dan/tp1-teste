@@ -38,5 +38,8 @@ class Usuario:
     def tem_livro(self):
         return len(self.livros) > 0
     
-    
+    def listar_titulos_livros(self):
+        return [livro.titulo for livro in self.livros]
 
+    def listar_ids_livros(self):
+        return [livro.id for livro in self.livros]
