@@ -44,3 +44,6 @@ class Usuario:
             if livro.id == livro_id:
                 return True
         return False
+    
+    def tem_livro(self):
+        return len(self.livros) > 0
