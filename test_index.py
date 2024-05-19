@@ -19,7 +19,7 @@ def test_livro_criacao():
     #tentativa de criar um livro com um ID duplicado
     livro = Livro("1984", 101)
     assert livro.id == 101
-    assert livro.nome == "1984"
+    assert livro.titulo == "1984"
     assert livro.em_estoque
 
     with pytest.raises(ValueError):
@@ -96,5 +96,6 @@ def test_verifica_varios_ids_livro():
     assert isinstance(livro1, Livro) 
     assert isinstance(livro3, Livro)
     assert isinstance(livro2, Livro)
+    
 if __name__ == "__main__":
     pytest.main()
