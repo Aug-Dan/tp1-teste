@@ -8,3 +8,8 @@ class Livro:
         self.id = id
         self.em_estoque = em_estoque
         Livro._ids_existentes.add(id)
+
+    def salvar_no_banco(self, cursor):
+        cursor.execute('''
+        INSERT INTO livros (id, titulo, em_estoque) VALUES (?, ?, ?)
+        ''', (self.id, self.titulo, self.em_estoque))
