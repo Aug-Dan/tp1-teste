@@ -1,4 +1,4 @@
-from class_livro import Livro 
+from book import Livro 
 from class_usuario import Usuario 
 
 class Biblioteca:

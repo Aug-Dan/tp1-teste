@@ -1,7 +1,6 @@
 import pytest
 from class_usuario import Usuario
-from class_livro import Livro
-from class_biblioteca import Biblioteca
+from book import Livro
 
 
 @pytest.fixture
