@@ -1,6 +1,6 @@
 import pytest
 from class_usuario import Usuario
-from class_livro import Livro
+from book import Livro
 
 import pytest
 
