@@ -49,3 +49,17 @@ class Biblioteca:
             self.livros[livro_id].em_estoque = True
         else:
             raise ValueError("Usuário não possui este livro.")
+        
+   # def consultar_livro_titulo(self, livro_titulo):
+    #    if livro_titulo not in self.livros:
+     #       raise ValueError("Livro não encontrado.")
+      #  return self.livros
+
+    def consultar_livro(self, termo):
+        if isinstance(termo, int):
+            return self.livros.get(termo).titulo if termo in self.livros else None
+        elif isinstance(termo, str):
+            ids = [livro_id for livro_id, livro in self.livros.items() if livro.titulo == termo]
+            return ids if ids else None
+        else:
+            raise ValueError("Termo de consulta inválido. Use um ID (int) ou um título (str).")
