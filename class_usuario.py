@@ -1,4 +1,4 @@
-from book import Livro
+from book import Book
 class Usuario:
     _ids_existentes = set()
 
