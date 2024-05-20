@@ -9,10 +9,20 @@ print('hello word')
 
 
 """
-esvaziar livros do usuario
-preço de 5 reais nos livros 
-colocar livro como alugado 
+- feito 
+funções a serem adicionadas: 
 
+1 cadastrar usuario -
+2 cadastrar livro -
+3 usuario pegar livro emprestado -
+4 usuario devolver livro -
+5 usuario consultar livro pelo titulo ou id 
+6 remover usuario
+7 remover livro 
+8 listar todos os usuarios 
+9 lstar todos os livros 
+10 consultar quais livros um usuario x tem 
+11 consultar para quem o livro x foi emprestado 
 
 """
 
