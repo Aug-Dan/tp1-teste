@@ -19,3 +19,12 @@ CREATE TABLE IF NOT EXISTS users (
 
 )
 ''')
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS loans (
+    user INTEGER NOT NULL,
+    book_id INTEGER PRIMARY KEY,
+    
+    
+)
+''')
