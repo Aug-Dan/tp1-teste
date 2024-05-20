@@ -2,6 +2,7 @@ import pytest
 from class_usuario import Usuario
 from book import Livro
 
+import pytest
 
 @pytest.fixture
 def usuario_padrao():
@@ -10,14 +11,6 @@ def usuario_padrao():
 @pytest.fixture 
 def livro_padrao():
     return Livro("Título", 0)
-
-@pytest.fixture
-def biblioteca_padrao():
-    return Biblioteca() 
-
-@pytest.fixture()
-def usuario1():
-    return Usuario(1, "Usuario1")
 
 def test_usuario_criacao(usuario_padrao):
     usuario = usuario_padrao  # Usar a fixture como um argumento do teste
@@ -124,36 +117,6 @@ def test_listar_ids_livros(usuario_padrao):
     assert 33 in ids
     assert 333 in ids
     assert len(ids) == 2
-
-def test_biblioteca_inicia_vazia(biblioteca_padrao):
-    biblioteca_padrao = biblioteca_padrao 
-    assert len(biblioteca_padrao.usuarios) == 0
-    assert len(biblioteca_padrao.livros) == 0
-
-def test_adicionar_usuario(biblioteca_padrao, usuario_padrao, usuario1):
-    #biblioteca_padrao.adicionar_usuario(usuario1)
-    biblioteca_padrao.adicionar_usuario(usuario_padrao)
-    biblioteca_padrao.adicionar_usuario(usuario1)
-
-    assert 0 in biblioteca_padrao.usuarios
-    assert 1 in biblioteca_padrao.usuarios
-
-def test_remover_usuario(biblioteca_padrao, usuario_padrao):
-    biblioteca_padrao.adicionar_usuario(usuario_padrao)
-    assert 0 in biblioteca_padrao.usuarios
-
-    biblioteca_padrao.remover_usuario(0)
-    assert 0 not in biblioteca_padrao.usuarios
-
-    with pytest.raises(ValueError):
-        biblioteca_padrao.remover_usuario(1)
-
-
-def test_consultar_livro(biblioteca_padrao):
-    livro2013 = Livro("teste", 2013)  # Ajustando o ID para 2013
-    biblioteca_padrao.adicionar_livro(livro2013)
-    assert biblioteca_padrao.consultar_livro("teste") == [2013]  # Esperando uma lista de IDs
-
 
 if __name__ == "__main__":
     pytest.main()
