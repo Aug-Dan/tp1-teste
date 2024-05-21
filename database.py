@@ -16,7 +16,12 @@ CREATE TABLE IF NOT EXISTS books (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
-
+    CPF INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    is_admin BOOLEAN NOT NULL
+    current_loans_count INTEGER CHECK (current_loans_count >= 0 AND current_loans_count <= 3)
 )
 ''')
 
@@ -24,7 +29,8 @@ cursor.execute('''
 CREATE TABLE IF NOT EXISTS loans (
     user INTEGER NOT NULL,
     book_id INTEGER PRIMARY KEY,
-    
-    
+    loan_date DATE NOT NULL,
+    return_date DATE NOT NULL,
+    renewal_credits INTEGER CHECK (current_loans_count >= 0 AND current_loans_count <= 3)   
 )
 ''')
