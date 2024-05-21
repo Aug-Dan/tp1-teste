@@ -1,31 +1,22 @@
 import sqlite3
 from book import Book
-# from class_usuario import Usuario 
+from database_manager import DatabaseManager
+from user import User
+from library import Library
 
-conn = sqlite3.connect('biblioteca.db')
-cursor = conn.cursor()
+db = DatabaseManager('biblioteca.db')
 
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS books (
-    id INTEGER PRIMARY KEY,
-    title TEXT NOT NULL,
-    author TEXT NOT NULL,
-    genre TEXT NOT NULL,
-    borrowed BOOLEAN NOT NULL
-)
-''')
+John = User(db, 70270270270, 'John Marston', 'email@gmail.com', '123', False)
 
-livro1 = Book(10, 'O Hobbit', 'J. R. R. Tolkien', 'Fantasia')
-livro1.register_new_book(cursor)
+sistema = Library(db)
 
-# Commit para salvar 
-conn.commit()
+sistema.add_user(John)
 
-# Executar a consulta SQL para selecionar todos os itens na tabela 'livros'
-rows = cursor.execute('SELECT * FROM books')
+db.commit()
+
+rows = db.execute_query('SELECT * FROM users')
 
 for row in rows:
     print(row)
 
-cursor.close()
-conn.close()
+db.close()

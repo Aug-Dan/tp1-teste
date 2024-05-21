@@ -1,4 +1,3 @@
-
 import sqlite3
 
 conn = sqlite3.connect('biblioteca.db')
@@ -16,11 +15,11 @@ CREATE TABLE IF NOT EXISTS books (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
-    CPF INTEGER NOT NULL,
+    CPF INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
-    is_admin BOOLEAN NOT NULL
+    is_admin BOOLEAN NOT NULL,
     current_loans_count INTEGER CHECK (current_loans_count >= 0 AND current_loans_count <= 3)
 )
 ''')
@@ -31,6 +30,10 @@ CREATE TABLE IF NOT EXISTS loans (
     book_id INTEGER PRIMARY KEY,
     loan_date DATE NOT NULL,
     return_date DATE NOT NULL,
-    renewal_credits INTEGER CHECK (current_loans_count >= 0 AND current_loans_count <= 3)   
+    renewal_credits INTEGER CHECK (renewal_credits >= 0 AND renewal_credits <= 3)   
 )
 ''')
+
+conn.commit()
+cursor.close()
+conn.close()

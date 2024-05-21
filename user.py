@@ -1,6 +1,7 @@
 class User:
 
-    def __init__(self, CPF, name, email, password, is_admin):
+    def __init__(self, db_manager, CPF, name, email, password, is_admin):
+        self.db_manager = db_manager
         self.CPF = CPF
         self.name = name
         self.email = email
