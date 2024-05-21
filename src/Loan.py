@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from book import Book
-from user import User
+from Book import Book
+from User import User
 import holidays
 
 MAX_RENEWALS = 3
@@ -30,7 +30,7 @@ class Loan:
     def renew(self):
         if (self.renewals < MAX_RENEWALS):
             self.due_date = self.calculate_due_date()
-            self.renew += 1
+            self.renewals += 1
         else:
             raise ValueError("Número máximos de renovações atingido")
     

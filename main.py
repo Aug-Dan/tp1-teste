@@ -1,5 +1,5 @@
 import sqlite3
-from book import Book
+from src.Book import Book
 # from class_usuario import Usuario 
 
 conn = sqlite3.connect('biblioteca.db')

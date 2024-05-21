@@ -1,4 +1,4 @@
-from book import Livro
+from src.Book import Livro
 from class_usuario import Usuario 
 
 usuario = Usuario(2, "Maria")

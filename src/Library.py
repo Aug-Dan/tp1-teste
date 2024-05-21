@@ -1,34 +1,34 @@
-from book import Book
-from user import User
+from Book import Book
+from User import User
 
 class Library:
     def __init__(self):
         self.users = {}
         self.books = {}
 
-    def adicionar_usuario(self, usuario):
+    def add_user(self, usuario):
         if usuario.CPF in self.users:
             raise ValueError("Usuário com este CPF já existe.")
         self.users[usuario.CPF] = usuario
 
-    def remover_usuario(self, cpf):
+    def delete_user(self, cpf):
         if cpf in self.users:
             del self.users[cpf]
         else:
             raise ValueError("Usuário não encontrado.")
 
-    def adicionar_livro(self, livro):
+    def add_book(self, livro):
         if livro.id in self.books:
             raise ValueError("Livro com este ID já existe.")
         self.books[livro.id] = livro
 
-    def remover_livro(self, livro_id):
+    def delete_book(self, livro_id):
         if livro_id in self.books:
             del self.books[livro_id]
         else:
             raise ValueError("Livro não encontrado.")
 
-    def emprestar_livro(self, cpf, livro_id):
+    def lend_book(self, cpf, livro_id):
         if cpf not in self.users:
             raise ValueError("Usuário não encontrado.")
         if livro_id not in self.books:
@@ -41,7 +41,7 @@ class Library:
         else:
             raise ValueError("Livro não está disponível para empréstimo.")
 
-    def devolver_livro(self, cpf, livro_id):
+    def return_book(self, cpf, livro_id):
         if cpf not in self.users:
             raise ValueError("Usuário não encontrado.")
         usuario = self.users[cpf]
@@ -50,7 +50,7 @@ class Library:
         else:
             raise ValueError("Usuário não possui este livro.")
 
-    def consultar_livro(self, termo):
+    def query_book(self, termo):
         if isinstance(termo, int):
             return self.books.get(termo).title if termo in self.books else None
         elif isinstance(termo, str):
