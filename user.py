@@ -30,7 +30,6 @@ class User:
             raise PermissionError("Apenas administradores podem criar novos usuários.")
 
     def add_book(self, book):
-        self.loans.append(book)
         self.current_loans_count += 1
 
     def remove_book(self, book_id):
@@ -40,8 +39,3 @@ class User:
                 self.current_loans_count -= 1
                 return True
         return False
-
-
-    def has_books(self):
-        return self.current_loans_count > 0    
-    
