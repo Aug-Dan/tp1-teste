@@ -1,6 +1,6 @@
 import pytest
-from book import Book
-from user import User
+from src.Book import Book
+from src.user import User
 from library import Library
 
 def test_get_nome():
