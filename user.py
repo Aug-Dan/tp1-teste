@@ -32,10 +32,3 @@ class User:
     def add_book(self, book):
         self.current_loans_count += 1
 
-    def remove_book(self, book_id):
-        for book in self.loans:
-            if book.id == book_id:
-                self.loans.remove(book)
-                self.current_loans_count -= 1
-                return True
-        return False
