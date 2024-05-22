@@ -31,10 +31,12 @@ class User:
         else:
             raise PermissionError("Apenas administradores podem criar novos usuários.")
 
-    def add_book(self, book):
-        self.current_loans_count += 1
+    # Métodos de 
 
-    def remove_book(self, book):
-        if self.current_loans_count == 0:
-            raise ValueError("A contagem de empréstimos já é zero. Não é possível remover mais livros.")
-        self.current_loans_count -= 1
+    # def add_book(self, book):
+    #     self.current_loans_count += 1
+
+    # def remove_book(self, book):
+    #     if self.current_loans_count == 0:
+    #         raise ValueError("A contagem de empréstimos já é zero. Não é possível remover mais livros.")
+    #     self.current_loans_count -= 1
