@@ -1,7 +1,7 @@
 import pytest
 from src.Book import Book
 from src.User import User
-from src.Libray import Library
+from src.Library import Library
 
 def test_get_nome():
     user = User("12345678900", "Test User", "test@example.com", "password", False)
