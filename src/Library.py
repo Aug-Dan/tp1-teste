@@ -1,21 +1,24 @@
 from Book import Book
 from User import User
 
+
 class Library:
     def __init__(self, db_manager):
         self.db_manager = db_manager
 
     def add_user(self, user):
         query = "INSERT INTO users (cpf, name, email, password, is_admin, current_loans_count) VALUES (?, ?, ?, ?, ?, ?)"
-        self.db_manager.execute_query(query, (user.cpf, user.name, user.email, user.password, user.is_admin, user.current_loans_count))
+        self.db_manager.execute_query(query, (user.CPF, user.name, user.email, user.password, user.is_admin, user.current_loans_count))
         self.db_manager.commit()
 
-    def remove_user(self, cpf):
-        query = "DELETE FROM users WHERE CPF = ?"
-        if query is None:
-            raise TypeError("usuário não encontrado")
-        self.db_manager.execute_query(query, (cpf,))
-        self.db_manager.commit()
+    def get_db_manager(self):
+        return self.db_manager
+
+    # def remover_usuario(self, cpf):
+    #     if cpf in self.users:
+    #         del self.users[cpf]
+    #     else:
+    #         raise ValueError("Usuário não encontrado.")
 
     # def adicionar_livro(self, livro):
     #     if livro.id in self.books:

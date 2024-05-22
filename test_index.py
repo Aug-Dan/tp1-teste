@@ -3,91 +3,109 @@ from src.Book import Book
 from src.User import User
 from src.Library import Library
 
-def test_get_nome():
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
-    assert user.get_nome() == "Test User"
+@pytest.fixture
+def admin_user():
+    # Simulando um usuário administrador
+    return User(db_manager=None, CPF="12345678900", name="Admin", email="admin@example.com", password="admin123", is_admin=True)
 
-def test_get_CPF():
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
-    assert user.get_CPF() == "12345678900"
+@pytest.fixture
+def regular_user():
+    # Simulando um usuário não-administrador
+    return User(db_manager=None, CPF="98765432100", name="Regular", email="regular@example.com", password="regular123", is_admin=False)
 
-def test_get_email():
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
-    assert user.get_email() == "test@example.com"
+@pytest.fixture
+def sample_book():
+    return Book(db_manager=None,id=1, title="Sample Book", author="Sample Author", genre="Sample Genre")
 
-def test_get_password():
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
-    assert user.get_password() == "password"
+@pytest.fixture
+def sample_library():
+    # Criando uma instância de biblioteca para teste
+    return Library(db_manager=None)
 
-def test_get_is_admin():
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
-    assert user.get_is_admin() == False
+def test_get_nome(admin_user):
+    # Testa se o método get_nome retorna o nome corretamente
+    assert admin_user.get_nome() == "Admin"
 
-def test_create_user():
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
-    assert user.get_nome() == "Test User"
-    assert user.get_CPF() == "12345678900"
-    assert user.get_email() == "test@example.com"
-    assert user.get_password() == "password"
-    assert not user.get_is_admin()
+def test_get_CPF(admin_user):
+    # Testa se o método get_CPF retorna o CPF corretamente
+    assert admin_user.get_CPF() == "12345678900"
 
-def test_create_admin_user():
-    admin = User("12345678901", "Admin User", "admin@example.com", "password", True)
-    new_user = admin.create_user("98765432100", "New User", "new@example.com", "password", False)
-    assert new_user.get_nome() == "New User"
-    assert new_user.get_CPF() == "98765432100"
+def test_get_email(admin_user):
+    # Testa se o método get_email retorna o email corretamente
+    assert admin_user.get_email() == "admin@example.com"
 
-def test_create_user_without_permission():
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
+def test_get_password(admin_user):
+    # Testa se o método get_password retorna a senha corretamente
+    assert admin_user.get_password() == "admin123"
+
+def test_get_is_admin(admin_user):
+    # Testa se o método get_is_admin retorna se o usuário é administrador corretamente
+    assert admin_user.get_is_admin() == True
+
+def test_create_user_admin(admin_user):
+    # Testa se um administrador pode criar um novo usuário
+    new_user = admin_user.create_user(db_manager=None,CPF="11122233344", name="Novo Usuário", email="novo@example.com", password="novouser123", is_admin=False)
+    assert new_user.get_nome() == "Novo Usuário"
+    assert new_user.get_CPF() == "11122233344"
+    assert new_user.get_email() == "novo@example.com"
+    assert new_user.get_password() == "novouser123"
+    assert not new_user.get_is_admin()
+
+def test_create_user_regular(regular_user):
+    # Testa se um usuário não-administrador não pode criar um novo usuário
     with pytest.raises(PermissionError):
-        user.create_user("98765432100", "New User", "new@example.com", "password", False)
+        regular_user.create_user(db_manager=None,CPF="11122233344", name="Novo Usuário", email="novo@example.com", password="novouser123", is_admin=False)
+
+def test_add_book(admin_user):
+    # Testa se a contagem de empréstimos é incrementada corretamente ao adicionar um livro
+    initial_count = admin_user.current_loans_count
+    admin_user.add_book("Livro 1")
+    assert admin_user.current_loans_count == initial_count + 1
+
+def test_get_id(sample_book):
+    assert sample_book.get_id() == 1
+
+def test_get_title(sample_book):
+    assert sample_book.get_title() == "Sample Book"
+
+def test_get_author(sample_book):
+    assert sample_book.get_author() == "Sample Author"
+
+def test_get_genre(sample_book):
+    assert sample_book.get_genre() == "Sample Genre"
+
+def test_get_borrowed(sample_book):
+    assert sample_book.get_borrowed() == False
+
+def test_get_db_manager(sample_library):
+    # Testa se o método get_db_manager retorna o gerenciador de banco de dados corretamente
+    assert sample_library.get_db_manager() == None 
+
+def test_user_remove_book(regular_user):
+    inicio = regular_user.current_loans_count 
+    regular_user.add_book(sample_book)
+    regular_user.remove_book(sample_book)
+    assert regular_user.current_loans_count == inicio + 0
+
+def test_user_remove_book_zero_count_error(regular_user):
+    # Testa se o método remove_book lança um erro ao tentar remover um livro quando a contagem de empréstimos já é zero
+    with pytest.raises(ValueError):
+        regular_user.remove_book("Sample Book")
 
 
-def test_create_book():
-    book = Book(1, "Test Book", "Author", "Genre")
-    assert book.id == 1
-    assert book.title == "Test Book"
-    assert book.author == "Author"
-    assert book.genre == "Genre"
-    assert not book.borrowed
+def test_user_remove_book_multiple_books(regular_user, sample_book):
+    # Testa se o método remove_book decrementa a contagem de empréstimos corretamente quando há múltiplos livros emprestados
+    regular_user.add_book(sample_book)  # Adiciona um livro para simular um empréstimo
+    regular_user.add_book(sample_book)  # Adiciona outro livro para simular múltiplos empréstimos do mesmo livro
+    initial_count = regular_user.current_loans_count
+    regular_user.remove_book(sample_book)
+    assert regular_user.current_loans_count == initial_count - 1
 
-def test_library_adicionar_usuario():
-    library = Library()
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
-    library.adicionar_usuario(user)
-    assert library.users["12345678900"] == user
-
-def test_library_remover_usuario():
-    library = Library()
-    user = User("12345678900", "Test User", "test@example.com", "password", False)
-    library.adicionar_usuario(user)
-    library.remover_usuario("12345678900")
-    assert "12345678900" not in library.users
-
-def test_library_adicionar_livro():
-    library = Library()
-    book = Book(1, "Test Book", "Author", "Genre")
-    library.adicionar_livro(book)
-    assert library.books[1] == book
-
-def test_library_remover_livro():
-    library = Library()
-    book = Book(1, "Test Book", "Author", "Genre")
-    library.adicionar_livro(book)
-    library.remover_livro(1)
-    assert 1 not in library.books
-
-
-def test_library_consultar_livro_por_id():
-    library = Library()
-    book = Book(1, "Test Book", "Author", "Genre")
-    library.adicionar_livro(book)
-    assert library.consultar_livro(1) == "Test Book"
-
-def test_library_consultar_livro_por_titulo():
-    library = Library()
-    book1 = Book(1, "Test Book", "Author", "Genre")
-    book2 = Book(2, "Test Book", "Author", "Genre")
-    library.adicionar_livro(book1)
-    library.adicionar_livro(book2)
-    assert library.consultar_livro("Test Book") == [1, 2]
+def test_user_remove_book_different_books(regular_user, sample_book):
+    # Testa se o método remove_book decrementa a contagem de empréstimos corretamente quando há diferentes livros emprestados
+    other_book = Book(db_manager=None,id=2, title="Other Book", author="Other Author", genre="Other Genre")
+    regular_user.add_book(sample_book)  # Adiciona um livro para simular um empréstimo
+    regular_user.add_book(other_book)  # Adiciona outro livro para simular um empréstimo diferente
+    initial_count = regular_user.current_loans_count
+    regular_user.remove_book(sample_book)
+    assert regular_user.current_loans_count == initial_count - 1

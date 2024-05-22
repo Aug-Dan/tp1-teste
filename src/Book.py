@@ -14,3 +14,18 @@ class Book:
         INSERT INTO books (id, title, author, genre, borrowed) VALUES (?, ?, ?, ?, ?)''', 
         (self.id, self.title, self.author, self.genre, self.borrowed))
 
+    def get_id(self):
+        return self.id
+
+    def get_title(self):
+        return self.title
+
+    def get_author(self):
+        return self.author
+
+    def get_genre(self):
+        return self.genre
+
+    def get_borrowed(self):
+        return self.borrowed
+

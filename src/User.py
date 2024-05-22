@@ -1,3 +1,4 @@
+from Book import Book
 class User:
 
     def __init__(self, db_manager, CPF, name, email, password, is_admin):
@@ -30,7 +31,10 @@ class User:
         else:
             raise PermissionError("Apenas administradores podem criar novos usuários.")
 
-
     def add_book(self, book):
         self.current_loans_count += 1
 
+    def remove_book(self, book):
+        if self.current_loans_count == 0:
+            raise ValueError("A contagem de empréstimos já é zero. Não é possível remover mais livros.")
+        self.current_loans_count -= 1
