@@ -1,8 +1,8 @@
 import sqlite3
-from book import Book
-from database_manager import DatabaseManager
-from user import User
-from library import Library
+from Book import Book
+from DatabaseManager import DatabaseManager
+from User import User
+from Library import Library
 
 db = DatabaseManager('biblioteca.db')
 
