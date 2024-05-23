@@ -1,4 +1,4 @@
-from Book import Book
+from .Book import Book
 class User:
 
     def __init__(self, db_manager, CPF, name, email, password, is_admin):
