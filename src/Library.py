@@ -11,8 +11,7 @@ class Library:
         self.db_manager.execute_query(query, (user.CPF, user.name, user.email, user.password, user.is_admin, user.current_loans_count))
         self.db_manager.commit()
 
-    def get_db_manager(self):
-        return self.db_manager
+    def remove_user()
 
     # def remover_usuario(self, cpf):
     #     if cpf in self.users:
@@ -60,4 +59,7 @@ class Library:
     #         ids = [livro_id for livro_id, livro in self.books.items() if livro.title == termo]
     #         return ids if ids else None
     #     else:
-    #         raise ValueError("Termo de consulta inválido. Use um ID (int) ou um título (str).")
+    #         raise ValueError("Termo de consulta inválido. Use um ID (int) ou um título (str).") 
+    
+    def get_db_manager(self):
+        return self.db_manager

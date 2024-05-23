@@ -25,9 +25,16 @@ def test_add_user(setUp):
             "INSERT INTO users (cpf, name, email, password, is_admin, current_loans_count) VALUES (?, ?, ?, ?, ?, ?)",
             (user.CPF, user.name, user.email, user.password, user.is_admin, user.current_loans_count)
         )
-        
+
     # Verifica se o método commit foi chamado uma vez
     mock_db.commit.assert_called_once()
 
+def test_remove_user(setUp):
+    library, mock_db = setUp
+
+    cpf = "12345678900"
+    library.remove_user(cpf)
+
+    mock_db.execute_query
 
 
