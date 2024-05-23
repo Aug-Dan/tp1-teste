@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from Book import Book
-from User import User
+from .Book import Book
+from .User import User
 import holidays
 
 MAX_RENEWALS = 3

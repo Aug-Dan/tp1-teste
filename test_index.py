@@ -2,6 +2,7 @@ import pytest
 from src.Book import Book
 from src.User import User
 from src.Library import Library
+from src.Barricade import Barricade
 
 @pytest.fixture
 def admin_user():
@@ -108,4 +109,40 @@ def test_user_remove_book_different_books(regular_user, sample_book):
     regular_user.add_book(other_book)  # Adiciona outro livro para simular um empréstimo diferente
     initial_count = regular_user.current_loans_count
     regular_user.remove_book(sample_book)
-    assert regular_user.current_loans_count == initial_count - 1
+    assert regular_user.current_loans_count == initial_count - 1 
+
+
+def test_barricade_cpf_valid():
+    assert Barricade.is_valid_cpf(14777309665) == True 
+
+def test_barricade_cpf_longo():
+    assert Barricade.is_valid_cpf(13444588888) == False 
+
+def test_barricade_cpf_curto():
+    assert Barricade.is_valid_cpf(1) == False 
+
+def test_barricade_cpf_somente_1():
+    assert Barricade.is_valid_cpf(11111111111) == False
+
+def test_barricade_cpf_invalid():
+    assert Barricade.is_valid_cpf(12345678900) == False
+
+def test_barricade_is_valid_cpf_zero():
+    assert Barricade.is_valid_cpf(00000000000) == False
+
+def test_barricade_user_cpf_valid(admin_user):
+    variavel_cpf_admin_user = admin_user.get_CPF()
+    assert Barricade.is_valid_cpf(variavel_cpf_admin_user) == False
+
+def test_barricade_cpf_string():
+    x = "14777309665"
+    assert Barricade.is_valid_cpf(x) == False
+    
+def test_barricade_password_valid():
+    assert Barricade.is_valid_password("Senha@123") == True 
+
+def test_barricade_password_weak():
+    assert Barricade.is_valid_password("Senha1") == False
+
+def test_barricade_password_no_upper():
+    assert Barricade.is_valid_password("senha1223@@@") == False 
