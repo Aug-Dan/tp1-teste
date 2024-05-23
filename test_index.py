@@ -1,22 +1,31 @@
 import pytest
+from datetime import datetime, timedelta
 from src.Book import Book
 from src.User import User
 from src.Library import Library
 from src.Barricade import Barricade
+from src.Loan import Loan, MAX_RENEWALS, LOAN_PERIOD_DAYS
+import holidays
+
+# Módulo de feriados do Brasil
+br_holidays = holidays.Brazil()
+
+
+
 
 @pytest.fixture
 def admin_user():
     # Simulando um usuário administrador
-    return User(db_manager=None, CPF="12345678900", name="Admin", email="admin@example.com", password="admin123", is_admin=True)
+    return User( CPF="12345678900", name="Admin", email="admin@example.com", password="admin123", is_admin=True)
 
 @pytest.fixture
 def regular_user():
     # Simulando um usuário não-administrador
-    return User(db_manager=None, CPF="98765432100", name="Regular", email="regular@example.com", password="regular123", is_admin=False)
+    return User(CPF="98765432100", name="Regular", email="regular@example.com", password="regular123", is_admin=False)
 
 @pytest.fixture
 def sample_book():
-    return Book(db_manager=None,id=1, title="Sample Book", author="Sample Author", genre="Sample Genre")
+    return Book(id=1, title="Sample Book", author="Sample Author", genre="Sample Genre")
 
 @pytest.fixture
 def sample_library():
@@ -45,7 +54,7 @@ def test_get_is_admin(admin_user):
 
 def test_create_user_admin(admin_user):
     # Testa se um administrador pode criar um novo usuário
-    new_user = admin_user.create_user(db_manager=None,CPF="11122233344", name="Novo Usuário", email="novo@example.com", password="novouser123", is_admin=False)
+    new_user = admin_user.create_user(CPF="11122233344", name="Novo Usuário", email="novo@example.com", password="novouser123", is_admin=False)
     assert new_user.get_nome() == "Novo Usuário"
     assert new_user.get_CPF() == "11122233344"
     assert new_user.get_email() == "novo@example.com"
@@ -55,7 +64,7 @@ def test_create_user_admin(admin_user):
 def test_create_user_regular(regular_user):
     # Testa se um usuário não-administrador não pode criar um novo usuário
     with pytest.raises(PermissionError):
-        regular_user.create_user(db_manager=None,CPF="11122233344", name="Novo Usuário", email="novo@example.com", password="novouser123", is_admin=False)
+        regular_user.create_user(CPF="11122233344", name="Novo Usuário", email="novo@example.com", password="novouser123", is_admin=False)
 
 def test_add_book(admin_user):
     # Testa se a contagem de empréstimos é incrementada corretamente ao adicionar um livro
@@ -104,7 +113,7 @@ def test_user_remove_book_multiple_books(regular_user, sample_book):
 
 def test_user_remove_book_different_books(regular_user, sample_book):
     # Testa se o método remove_book decrementa a contagem de empréstimos corretamente quando há diferentes livros emprestados
-    other_book = Book(db_manager=None,id=2, title="Other Book", author="Other Author", genre="Other Genre")
+    other_book = Book(id=2, title="Other Book", author="Other Author", genre="Other Genre")
     regular_user.add_book(sample_book)  # Adiciona um livro para simular um empréstimo
     regular_user.add_book(other_book)  # Adiciona outro livro para simular um empréstimo diferente
     initial_count = regular_user.current_loans_count
@@ -135,7 +144,7 @@ def test_barricade_user_cpf_invalid(admin_user):
     assert Barricade.is_valid_cpf(variavel_cpf_admin_user) == False
 
 def test_barricade_user_cpf_valid():
-    usuario_comum = User(db_manager=None, CPF= 94251657691, name="Admin", email="admin@example.com", password="admin123", is_admin=True)
+    usuario_comum = User( CPF= 94251657691, name="Admin", email="admin@example.com", password="admin123", is_admin=True)
     assert Barricade.is_valid_cpf(usuario_comum.get_CPF()) == True
 
 def test_barricade_cpf_string():
@@ -194,3 +203,49 @@ def test_email_without_dot_com():
 def test_get_email_of_user(admin_user):
 
     assert Barricade.is_valid_email(admin_user.get_email())
+    
+def test_loan_initialization(regular_user,sample_book):
+    loan_date = datetime(2023, 5, 20)
+    
+    loan = Loan(regular_user, sample_book, loan_date)
+    
+    assert loan.user == regular_user
+    assert loan.book == sample_book
+    assert loan.loan_date == loan_date
+    assert loan.due_date == loan_date + timedelta(days=LOAN_PERIOD_DAYS)
+    assert loan.renewals == 0
+
+def test_calculate_due_date(regular_user,sample_book):
+    loan_date = datetime(2023, 5, 20)
+    
+    loan = Loan(regular_user, sample_book, loan_date)
+    calculated_due_date = loan.calculate_due_date()
+    
+    expected_due_date = loan.due_date + timedelta(days=LOAN_PERIOD_DAYS)
+    while expected_due_date.weekday() >= 5 or expected_due_date in br_holidays:
+        expected_due_date += timedelta(days=1)
+    
+    assert calculated_due_date == expected_due_date
+
+def test_renew(regular_user,sample_book):
+    loan_date = datetime(2023, 5, 20)
+    
+    loan = Loan(regular_user, sample_book, loan_date)
+    
+    for _ in range(MAX_RENEWALS):
+        old_due_date = loan.due_date
+        loan.renew()
+        assert loan.due_date > old_due_date
+        assert loan.renewals <= MAX_RENEWALS
+    
+    with pytest.raises(ValueError, match="Número máximos de renovações atingido"):
+        loan.renew()
+
+def test_repr(regular_user,sample_book):
+    loan_date = datetime(2023, 5, 20)
+    
+    loan = Loan(regular_user, sample_book, loan_date)
+    expected_repr = f"Loan({regular_user}, {sample_book}, {loan.due_date}, {loan.renewals} renewals)"
+    
+    assert repr(loan) == expected_repr
+    

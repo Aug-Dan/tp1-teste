@@ -30,11 +30,11 @@ class User:
     
     # Métodos de Biblioteca
     
-    # def create_user(self, db_manager, CPF, name, email, password, is_admin):
-    #     if self.is_admin:
-    #         return User(db_manager, CPF, name, email, password, is_admin)
-    #     else:
-    #         raise PermissionError("Apenas administradores podem criar novos usuários.")
+    def create_user(self, CPF, name, email, password, is_admin):
+        if self.is_admin:
+             return User( CPF, name, email, password, is_admin)
+        else:
+             raise PermissionError("Apenas administradores podem criar novos usuários.")
 
     def add_book(self, book):
          self.current_loans_count += 1
