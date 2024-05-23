@@ -8,10 +8,9 @@ LOAN_PERIOD_DAYS = 14
 
 class Loan:
 
-    def __init__(self, db_manager, user, book, loan_date):
+    def __init__(self, user, book, loan_date):
         if not isinstance(loan_date, datetime):
             raise TypeError("loan_date deve ser do tipo datetime")
-        self.db_manager = db_manager
         self.user = user
         self.book = book
         self.loan_date = loan_date

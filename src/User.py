@@ -1,8 +1,7 @@
 from Book import Book
 class User:
 
-    def __init__(self, db_manager, CPF, name, email, password, is_admin):
-        self.db_manager = db_manager
+    def __init__(self, CPF, name, email, password, is_admin):
         self.CPF = CPF
         self.name = name
         self.email = email
@@ -25,13 +24,17 @@ class User:
     def get_is_admin(self):
         return self.is_admin
     
-    def create_user(self, db_manager, CPF, name, email, password, is_admin):
-        if self.is_admin:
-            return User(db_manager, CPF, name, email, password, is_admin)
-        else:
-            raise PermissionError("Apenas administradores podem criar novos usuários.")
-
-    # Métodos de 
+    def get_current_loans(self):
+        return self.current_loans_count
+    
+    
+    # Métodos de Biblioteca
+    
+    # def create_user(self, db_manager, CPF, name, email, password, is_admin):
+    #     if self.is_admin:
+    #         return User(db_manager, CPF, name, email, password, is_admin)
+    #     else:
+    #         raise PermissionError("Apenas administradores podem criar novos usuários.")
 
     # def add_book(self, book):
     #     self.current_loans_count += 1

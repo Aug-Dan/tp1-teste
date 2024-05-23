@@ -3,26 +3,30 @@ import sqlite3
 DATABASE_PATH = "../biblioteca.db"
 
 class DatabaseManager:
-    def __init__(self):
-        self.connection = sqlite3.connect(DATABASE_PATH)
-        self.cursor = self.connection.cursor()
+    __instance = None
+
+    def __new__(cls):
+        if cls.__instance is None:
+            cls.__instance = super(DatabaseManager, cls).__new__(cls)
+            cls.__instance.connection = None
+            cls.__instance.cursor = None
+        return cls.__instance
 
     def initialize_database(self):
-        try:
-            self.connection = sqlite3.connect(self.DATABASE_PATH)
-            self.cursor = self.connection.cursor()
-        except sqlite3.Error as e:
-            print(f"Erro ao conectar ao banco de dados: {e}")
-            self.close()
-                
+        if self.connection is None or self.cursor is None:
+            try:
+                self.connection = sqlite3.connect(DATABASE_PATH)
+                self.cursor = self.connection.cursor()
+            except sqlite3.Error as e:
+                print(f"Erro ao conectar ao banco de dados: {e}")
+                self.close()
+
     def close(self):
         if self.connection:
             self.connection.close()
             self.connection = None
             self.cursor = None
 
-    def __del__(self):
-        self.close()
 
     def execute_query(self, query, params=()):
         self.cursor.execute(query, params)
@@ -30,6 +34,6 @@ class DatabaseManager:
 
     def commit(self):
         self.connection.commit()
-
-    def close(self):
-        self.connection.close()
+    
+    def __del__(self):
+        self.close()
