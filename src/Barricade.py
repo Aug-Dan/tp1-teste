@@ -8,7 +8,7 @@ class Barricade:
     def is_valid_cpf(cpf: int) -> bool:
         # Um CPF válido deve ter 11 dígitos e não ser uma sequência repetida
         cpf_str = str(cpf).zfill(VALID_CPF_LEN)
-        if len(cpf_str) != VALID_CPF_LEN or len(set(cpf_str)) == 1:
+        if len(cpf_str) != VALID_CPF_LEN or len(set(cpf_str)) == 1 or (not isinstance(cpf, int)):
             return False
 
         # Calcula o primeiro dígito verificador
