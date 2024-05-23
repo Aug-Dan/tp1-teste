@@ -127,5 +127,22 @@ def test_barricade_cpf_somente_1():
 def test_barricade_cpf_invalid():
     assert Barricade.is_valid_cpf(12345678900) == False
 
-def test_is_valid_cpf_zero():
+def test_barricade_is_valid_cpf_zero():
     assert Barricade.is_valid_cpf(00000000000) == False
+
+def test_barricade_user_cpf_valid(admin_user):
+    variavel_cpf_admin_user = admin_user.get_CPF()
+    assert Barricade.is_valid_cpf(variavel_cpf_admin_user) == False
+
+def test_barricade_cpf_string():
+    x = "14777309665"
+    assert Barricade.is_valid_cpf(x) == False
+    
+def test_barricade_password_valid():
+    assert Barricade.is_valid_password("Senha@123") == True 
+
+def test_barricade_password_weak():
+    assert Barricade.is_valid_password("Senha1") == False
+
+def test_barricade_password_no_upper():
+    assert Barricade.is_valid_password("senha1223@@@") == False 
