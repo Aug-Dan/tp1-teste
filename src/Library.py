@@ -1,5 +1,5 @@
-from Book import Book
-from User import User
+from .Book import Book
+from .User import User
 
 
 class Library:

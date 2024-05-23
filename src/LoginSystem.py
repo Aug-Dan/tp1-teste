@@ -1,4 +1,4 @@
-from User import User
+from .User import User
 from enum import Enum
 
 PASSWORD_COLLUM = 3 # coluna da senha no banco de dados
