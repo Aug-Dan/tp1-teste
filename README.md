@@ -12,4 +12,4 @@
 
 3) Tecnologias utilizadas:
   - Utilizamos python, aliado de sua biblioteca de testes padrão, o pytest, que testavam as classes, suas funcionalidades, e o banco de dados utilizado, nesse caso,
-    optamos pelo NOSQL 
+    optamos pelo sqlite
