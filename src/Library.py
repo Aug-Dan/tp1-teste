@@ -1,5 +1,6 @@
 from .Book import Book
 from .User import User
+from .Loan import Loan
 
 
 class Library:
@@ -11,38 +12,34 @@ class Library:
         self.db_manager.execute_query(query, (user.CPF, user.name, user.email, user.password, user.is_admin, user.current_loans_count))
         self.db_manager.commit()
 
-    def remove_user()
+    def remove_user(self, cpf):
+        self.db_manager.execute_query("SELECT * FROM users WHERE cpf=?", (cpf,))
+        user_to_be_removed = self.db_manager.fetchone()
+        if user_to_be_removed is None:
+            raise ValueError("Usuário não encontrado.")
+        
+        self.db_manager.execute_query("DELETE FROM users WHERE cpf=?", (cpf,))
+        self.db_manager.commit()
 
-    # def remover_usuario(self, cpf):
-    #     if cpf in self.users:
-    #         del self.users[cpf]
-    #     else:
-    #         raise ValueError("Usuário não encontrado.")
+    def add_book(self, book):
+        query = "INSERT INTO books (id, title, author, genre, borrowed) VALUES (?, ?, ?, ?, ?)"
+        self.db_manager.execute_query(query, (book.id, book.title, book.author, book.genre, book.borrowed))
+        self.db_manager.commit()
+    
+    def remove_book(self, id):
+        self.db_manager.execute_query("SELECT * FROM books WHERE id=?", (id,))
+        book_to_be_removed = self.db_manager.fetchone()
+        if book_to_be_removed is None:
+            raise ValueError("Livro não encontrado.")
+        
+        self.db_manager.execute_query("DELETE FROM books WHERE id=?", (id,))
+        self.db_manager.commit()
 
-    # def adicionar_livro(self, livro):
-    #     if livro.id in self.books:
-    #         raise ValueError("Livro com este ID já existe.")
-    #     self.books[livro.id] = livro
-
-    # def remover_livro(self, livro_id):
-    #     if livro_id in self.books:
-    #         del self.books[livro_id]
-    #     else:
-    #         raise ValueError("Livro não encontrado.")
-
-    # def emprestar_livro(self, cpf, livro_id):
-    #     if cpf not in self.users:
-    #         raise ValueError("Usuário não encontrado.")
-    #     if livro_id not in self.books:
-    #         raise ValueError("Livro não encontrado.")
-    #     livro = self.books[livro_id]
-    #     usuario = self.users[cpf]
-    #     if not livro.borrowed:
-    #         usuario.add_book(livro)
-    #         livro.borrowed = True
-    #     else:
-    #         raise ValueError("Livro não está disponível para empréstimo.")
-
+    def loan_book(self, loan):
+        query = "INSERT into loans (user, book_id, loan_date, return_date, renewal_credits) VALUES (?, ?, ?, ?, ?)"
+        self.db_manager.execute_query(query, (loan.user, loan.book, loan.loan_date, loan.due_date, loan.renewals))
+        self.db_manager.commit()
+    
     # def devolver_livro(self, cpf, livro_id):
     #     if cpf not in self.users:
     #         raise ValueError("Usuário não encontrado.")

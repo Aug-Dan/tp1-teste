@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS books (
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
-    cpf INTEGER NOT NULL,
+    cpf INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     password TEXT NOT NULL,
@@ -27,10 +27,13 @@ CREATE TABLE IF NOT EXISTS users (
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS loans (
     user INTEGER NOT NULL,
-    book_id INTEGER PRIMARY KEY,
+    book_id INTEGER,
     loan_date DATE NOT NULL,
     return_date DATE NOT NULL,
-    renewal_credits INTEGER CHECK (renewal_credits >= 0 AND renewal_credits <= 3)   
+    renewal_credits INTEGER CHECK (renewal_credits >= 0 AND renewal_credits <= 3)  
+    PRIMARY KEY (user, book_id),
+    FOREIGN KEY (user) REFERENCES users(cpf),
+    FOREIGN KEY (book_id) REFERENCES books(id)
 )
 ''')
 

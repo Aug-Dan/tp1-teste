@@ -27,11 +27,13 @@ class DatabaseManager:
             self.connection = None
             self.cursor = None
 
-
     def execute_query(self, query, params=()):
         self.cursor.execute(query, params)
         return self.cursor
 
+    def fetchone(self):
+        return self.cursor.fetchone()
+    
     def commit(self):
         self.connection.commit()
     
