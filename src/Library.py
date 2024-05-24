@@ -1,6 +1,7 @@
 from .Book import Book
 from .User import User
 from .Loan import Loan
+from datetime import timedelta
 
 
 class Library:
@@ -40,23 +41,43 @@ class Library:
         self.db_manager.execute_query(query, (loan.user, loan.book, loan.loan_date, loan.due_date, loan.renewals))
         self.db_manager.commit()
     
-    # def devolver_livro(self, cpf, livro_id):
-    #     if cpf not in self.users:
-    #         raise ValueError("Usuário não encontrado.")
-    #     usuario = self.users[cpf]
-    #     if usuario.remove_book(livro_id):
-    #         self.books[livro_id].borrowed = False
-    #     else:
-    #         raise ValueError("Usuário não possui este livro.")
+    def return_book(self, cpf, book_id):
+        # Remove o empréstimo da tabela loans
+        self.db_manager.execute_query("DELETE FROM loans WHERE user = ? AND book_id = ?" (cpf, book_id))
+        
+        # Atualiza o status do livro na tabela books
+        self.db_manager.execute_query("UPDATE books SET borrowed = FALSE WHERE id = ?", (book_id,))
+        
+        # Commit das alterações no banco de dados
+        self.db_manager.commit()
 
-    # def consultar_livro(self, termo):
-    #     if isinstance(termo, int):
-    #         return self.books.get(termo).title if termo in self.books else None
-    #     elif isinstance(termo, str):
-    #         ids = [livro_id for livro_id, livro in self.books.items() if livro.title == termo]
-    #         return ids if ids else None
-    #     else:
-    #         raise ValueError("Termo de consulta inválido. Use um ID (int) ou um título (str).") 
-    
+    def renew_book(self, book_id):
+        # Consulta para verificar o empréstimo do livro e obter os valores de return_date e renewal_credits
+        loan = self.db_manager.execute_query(
+            "SELECT return_date, renewal_credits FROM loans WHERE book_id = ?",
+            (book_id,)
+        ).fetchone()
+        
+        if loan is None:
+            raise ValueError("Empréstimo não encontrado para o livro especificado.")
+        
+        return_date, renewal_credits = loan
+        
+        # Verifica se o empréstimo tem créditos de renovação
+        if renewal_credits > 0:
+            new_return_date = return_date + timedelta(weeks=1)
+            new_renewal_credits = renewal_credits - 1
+            
+            # Atualiza a tabela loans com a nova data de devolução e créditos de renovação
+            self.db_manager.execute_query(
+                "UPDATE loans SET return_date = ?, renewal_credits = ? WHERE book_id = ?",
+                (new_return_date, new_renewal_credits, book_id)
+            )
+            
+            # Commit das alterações no banco de dados
+            self.db_manager.commit()
+        else:
+            raise ValueError("Renovações esgotadas.")
+
     def get_db_manager(self):
         return self.db_manager
