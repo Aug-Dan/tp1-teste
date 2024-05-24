@@ -1,6 +1,7 @@
 from .Book import Book
 from .User import User
 from .Loan import Loan
+from .DatabaseManager import DatabaseManager
 
 
 class Library:

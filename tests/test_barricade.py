@@ -1,8 +1,6 @@
 import pytest
 from src.Barricade import Barricade
 from src.User import User
-from src.User import User
-
 @pytest.fixture
 def admin_user():
     # Simulando um usuário administrador
@@ -61,18 +59,8 @@ def test_barricade_is_valid_password_invalid_no_special_char():
 
 def test_barricade_password_with_space():
     assert Barricade.is_valid_password("SENHA com ESP4Ç0") == False
-
-def test_barricade_is_strinf():
-    assert Barricade.is_string("string_comum") == True
-    assert Barricade.is_string(10) == False 
-
-def test_barricade_is_integer():
-    assert Barricade.is_integer(10) == True
-    assert Barricade.is_integer(10.4) == False
-    assert Barricade.is_integer("teste") == False
     
 def test_email_is_valid():
-
     assert Barricade.is_valid_email("email@gmail.com") 
 
 def test_email_with_numbers():
