@@ -2,7 +2,7 @@ import pytest
 import unittest
 from unittest.mock import MagicMock
 from unittest.mock import call
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from src.Library import Library
 from src.User import User
@@ -100,6 +100,71 @@ def test_loan_book(setUp):
 
     # Verifica se o método commit foi chamado uma vez
     mock_db.commit.assert_called_once()
+
+def test_renew_book_success(setUp):
+    library, mock_db, user, book = setUp
+    book_id = 1
+    return_date = datetime(2024, 5, 24)
+    renewal_credits = 1
+    # Mock para simular o retorno da consulta SELECT
+    mock_db.execute_query.return_value.fetchone.return_value = (return_date, renewal_credits)
+        
+    library.renew_book(book_id)
+        
+    # Verifica se a query SELECT foi chamada com os parâmetros corretos
+    mock_db.execute_query.assert_any_call(
+        "SELECT return_date, renewal_credits FROM loans WHERE book_id = ?",
+        (book_id,)
+    )
+        
+    # Verifica se a query UPDATE foi chamada com os parâmetros corretos
+    mock_db.execute_query.assert_any_call(
+        "UPDATE loans SET return_date = ?, renewal_credits = ? WHERE book_id = ?",
+        (return_date + timedelta(weeks=1), renewal_credits - 1, book_id)
+    )
+        
+    # Verifica se o commit foi chamado uma vez
+    mock_db.commit.assert_called_once()
+
+def test_renew_book_no_renewals_left(setUp):
+    library, mock_db, user, book = setUp
+    book_id = 1
+    return_date = datetime(2024, 5, 24)
+    renewal_credits = 0
+        
+    # Mock para simular o retorno da consulta SELECT
+    mock_db.execute_query.return_value.fetchone.return_value = (return_date, renewal_credits)
+        
+    with pytest.raises(ValueError, match="Renovações esgotadas."):
+        library.renew_book(book_id)
+        
+    # Verifica se a query SELECT foi chamada com os parâmetros corretos
+    mock_db.execute_query.assert_called_with(
+        "SELECT return_date, renewal_credits FROM loans WHERE book_id = ?",
+        (book_id,)
+    )
+        
+    # Verifica se o commit não foi chamado
+    mock_db.commit.assert_not_called()
+
+def test_renew_book_no_loan_found(setUp):
+    library, mock_db, user, book = setUp
+    book_id = 1
+        
+    # Mock para simular a ausência de retorno da consulta SELECT
+    mock_db.execute_query.return_value.fetchone.return_value = None
+        
+    with pytest.raises(ValueError, match="Empréstimo não encontrado para o livro especificado."):
+        library.renew_book(book_id)
+        
+    # Verifica se a query SELECT foi chamada com os parâmetros corretos
+    mock_db.execute_query.assert_called_with(
+        "SELECT return_date, renewal_credits FROM loans WHERE book_id = ?",
+        (book_id,)
+    )
+        
+    # Verifica se o commit não foi chamado
+    mock_db.commit.assert_not_called()
 
 
 
