@@ -12,6 +12,11 @@ def regular_user():
     # Simulando um usuário não-administrador
     return User(CPF="98765432100", name="Regular", email="regular@example.com", password="regular123", is_admin=False)
 
+@pytest.fixture
+def sample_book():
+    return Book(id=1, title="Sample Book", author="Sample Author", genre="Sample Genre")
+
+
 
 def test_get_nome(admin_user):
     # Testa se o método get_nome retorna o nome corretamente

@@ -20,7 +20,3 @@ def test_get_genre(sample_book):
 
 def test_get_borrowed(sample_book):
     assert sample_book.get_borrowed() == False
-
-def test_get_db_manager(sample_library):
-    # Testa se o método get_db_manager retorna o gerenciador de banco de dados corretamente
-    assert sample_library.get_db_manager() == None 

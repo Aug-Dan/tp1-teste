@@ -1,6 +1,12 @@
 import pytest
 from src.Barricade import Barricade
+from src.User import User
+from src.User import User
 
+@pytest.fixture
+def admin_user():
+    # Simulando um usuário administrador
+    return User( CPF="12345678900", name="Admin", email="admin@example.com", password="admin123", is_admin=True)
 
 def test_barricade_cpf_valid():
     assert Barricade.is_valid_cpf(14777309665) == True 
