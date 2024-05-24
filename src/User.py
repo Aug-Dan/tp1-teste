@@ -1,4 +1,4 @@
-from .Book import Book
+from src.Book import Book
 class User:
 
     def __init__(self, CPF, name, email, password, is_admin):

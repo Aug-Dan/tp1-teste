@@ -1,7 +1,7 @@
-from .Book import Book
-from .User import User
-from .Loan import Loan
-from .DatabaseManager import DatabaseManager
+from src.Book import Book
+from src.User import User
+from src.Loan import Loan
+from src.DatabaseManager import DatabaseManager
 
 
 class Library:
