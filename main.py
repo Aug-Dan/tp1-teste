@@ -1,7 +1,6 @@
-import sqlite3
-from Book import Book
-from DatabaseManager import DatabaseManager
-from User import User
-from Library import Library
+from src.Utils import Menu
+
+# Executa o programa
+Menu.display_welcome()
 
 

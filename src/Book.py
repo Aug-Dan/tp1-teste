@@ -11,15 +11,10 @@ class Book:
     def get_id(self):
         return self.id
 
-    def get_title(self):
-        return self.title
-
-    def get_author(self):
-        return self.author
-
-    def get_genre(self):
-        return self.genre
-
-    def get_borrowed(self):
-        return self.borrowed
+    def __repr__(self) -> str:
+        return (f"Book ID: {self.id}, "
+                f"Title: {self.title}, "
+                f"Author: {self.author}, "
+                f"Genre: {self.genre}, "
+                f"Borrowed: {self.borrowed}")
 

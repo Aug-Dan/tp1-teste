@@ -1,5 +1,6 @@
 from src.User import User
 from src.Barricade import Barricade 
+from src.DatabaseManager import DatabaseManager
 from enum import Enum
 
 PASSWORD_COLUMN = 3  # coluna da senha no banco de dados
@@ -15,14 +16,14 @@ class LoginFailedException(Exception):
         super().__init__(self.message)
 
 class AuthenticationSystem:
-    def __init__(self, cursor):
-        self.cursor = cursor
+    def __init__(self, db_manager : DatabaseManager):
+        self.db_manager = db_manager
     
     def login(self):
         try:
             cpf = int(input("Digite o CPF: "))
-            self.cursor.execute("SELECT * FROM users WHERE cpf = ?", (cpf,))
-            result = self.cursor.fetchone()
+            self.db_manager.execute_query("SELECT * FROM users WHERE cpf = ?", (cpf,))
+            result = self.db_manager.fetchone()
             if result is None:
                 raise LoginFailedException("Usuário não encontrado")
             else:

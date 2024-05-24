@@ -1,18 +1,23 @@
 from src.Library import Library
 from src.User import User
-from src.Loan import Loan
+from src.Loan import Loan, datetime
+from src.Book import Book
 from src.AuthenticationSystem import AuthenticationSystem, UserType
-from DatabaseManager import DatabaseManager
+from src.DatabaseManager import DatabaseManager
 
 from colorama import Fore, Style
 
 class Menu:
     @staticmethod
     def display_welcome():
-        KeepGoing = True
+        keep_going = True
+        db_manager = DatabaseManager()
+        db_manager.initialize_database()
+        library = Library(db_manager) 
+        
         print(Fore.GREEN + "Seja Bem Vindo ao Sistema" + Style.RESET_ALL)
         
-        while (KeepGoing):
+        while (keep_going):
             print(Fore.BLUE + "1 - Exibir Coleção")
             print("2 - Logar no sistema")
             print("3 - Sair" + Style.RESET_ALL)
@@ -21,33 +26,35 @@ class Menu:
             
             match option:
                 case 1:
-                    Library.show_collection()
+                    library.show_collection()
+                    
                 case 2: 
-                    Menu.display_login()
+                    # Pede para o usuário logar no sistema
+                    auth = AuthenticationSystem(db_manager)
+                    
+                    try:
+                        result = auth.login()
+                        if (result == UserType.Student):
+                            Menu.display_user_menu(library)
+                            
+                        elif (result == UserType.Admin):
+                            Menu.display_admin_menu(library)
+                            
+                    except Exception as e:
+                        print(f"Ocorreu um erro durante o login: {e}")
+                        
                 case 3:
-                    KeepGoing = False
+                    keep_going = False
+                    
                 case _:
                     print(Fore.RED + "Opção inválida. Por favor, tente novamente." + Style.RESET_ALL)
                     
-    @staticmethod
-    def display_login():
-        
-        # Pede para o usuário logar no sistema
-        auth = AuthenticationSystem()
-        try:
-            result = auth.login()
-            if (result == UserType.Student):
-                Menu.display_user_menu()
-            elif (result == UserType.Admin):
-                Menu.display_admin_menu()
-        except Exception as e:
-            print(f"Ocorreu um erro durante o login: {e}")
                     
     
     @staticmethod
-    def display_user_menu():
-        KeepGoing = True
-        while (KeepGoing):
+    def display_user_menu(library : Library):
+        keep_going = True
+        while (keep_going):
             print(Fore.BLUE + "1 - Exibir Coleção")
             print("2 - Devolver Livro")
             print("3 - Pegar Livro Emprestado")
@@ -58,22 +65,32 @@ class Menu:
             
             match option:
                 case 1:
-                    Library.show_collection()
-                case 2: 
-                    Library.return_book()
+                    library.show_collection()
+                    
+                case 2:
+                    cpf = int(input("Digite o cpf do usuário: "))
+                    book_id  = int(input("Digite o id do livro: "))
+                    library.return_book(cpf, book_id)
+                    
                 case 3:
-                    Library.loan_book()
+                    book = Menu.input_book_details()
+                    user = Menu.input_user_details()
+                    library.loan_book(user, book, datetime.today())
+                    
                 case 4:
-                    Library.renew_book()
+                    book_id  = int(input("Digite o id do livro: "))
+                    library.renew_book(book_id)
+                    
                 case 5:
-                    KeepGoing = False
+                    keep_going = False
+                    
                 case _:
                     print(Fore.RED + "Opção inválida. Por favor, tente novamente." + Style.RESET_ALL)
 
     @staticmethod
-    def display_admin_menu():
-        KeepGoing = True
-        while (KeepGoing):
+    def display_admin_menu(library : Library):
+        keep_going = True
+        while (keep_going):
             print(Fore.BLUE + "1 - Registar Usuário")
             print("2 - Remover Usuário")
             print("3 - Adicionar Livro")
@@ -84,17 +101,24 @@ class Menu:
             
             match option:
                 case 1:
-                    Library.add_user()
-                    pass
-                case 2: 
-                    Library.remove_user()
-                    pass
+                    user = Menu.input_user_details()
+                    library.add_user(user)
+                    
+                case 2:
+                    user = Menu.input_user_details()
+                    library.remove_user(user)
+                    
                 case 3:
-                    Library.add_book()
+                    book = Menu.input_book_details()
+                    library.add_book(book)
+                    
                 case 4:
-                    Library.remove_book()
+                    book = Menu.input_book_details()
+                    library.remove_book(book)
+
                 case 5:
-                    KeepGoing = False
+                    keep_going = False
+                    
                 case _:
                     print(Fore.RED + "Opção inválida. Por favor, tente novamente." + Style.RESET_ALL)
     
@@ -106,6 +130,14 @@ class Menu:
         is_admin = bool(input("Digite se o usuário é administrador: "))
         email = input("Digite o email do usuário: ")
         return User(cpf, name, email, password, is_admin)
+    
+    @staticmethod
+    def input_book_details() -> Book:
+        id  = int(input("Digite o id do livro: "))
+        title = input("Digite o título do livro: ")
+        author = input("Digite o autor do livro: ")
+        genre = input("Digite o gênero do livro: ")
+        return Book(id, title, author, genre)
         
         
         
