@@ -1,6 +1,7 @@
 import pytest
 from src.Barricade import Barricade
 from src.User import User
+
 @pytest.fixture
 def admin_user():
     # Simulando um usuário administrador
@@ -64,17 +65,16 @@ def test_email_is_valid():
     assert Barricade.is_valid_email("email@gmail.com") 
 
 def test_email_with_numbers():
-
     assert Barricade.is_valid_email("e22344322@gmail.com")
 
 def test_email_without_at():
-
     assert not Barricade.is_valid_email("email.com") 
 
 def test_email_without_dot_com():
-
     assert not Barricade.is_valid_email("email@aaaa")
 
 def test_get_email_of_user(admin_user):
-
     assert Barricade.is_valid_email(admin_user.get_email())
+    
+def test_barricade_password_only_special_chars():
+    assert Barricade.is_valid_password("@@@!!!$$$") == False

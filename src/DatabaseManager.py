@@ -1,6 +1,8 @@
 import sqlite3
+import os
 
-DATABASE_PATH = "../biblioteca.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_PATH = os.path.join(BASE_DIR, "../biblioteca.db")
 
 class DatabaseManager:
     __instance = None

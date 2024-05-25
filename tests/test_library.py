@@ -165,6 +165,18 @@ def test_renew_book_no_loan_found(setUp):
         
     # Verifica se o commit não foi chamado
     mock_db.commit.assert_not_called()
+    
+def test_return_book(setUp):
+    library, mock_db, user, book = setUp
+    
+    library.return_book(user.get_CPF, book.get_id)
+
+    mock_db.execute_query.assert_has_calls([
+        call("DELETE FROM loans WHERE user = ? AND book_id = ?", (user.get_CPF, book.get_id,)),
+        call("UPDATE books SET borrowed = FALSE WHERE id = ?", (book.get_id,))
+    ])
+
+    mock_db.commit.assert_called_once()
 
 
 

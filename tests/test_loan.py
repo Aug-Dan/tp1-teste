@@ -64,3 +64,17 @@ def test_repr(regular_user,sample_book):
     
     assert repr(loan) == expected_repr
     
+def test_renewal_date_on_holiday(regular_user, sample_book):
+    # Coloca o dia de emprestimo 28 dias antes do Natal
+    loan_date = datetime(2023, 12, 4)
+    
+    # Quando cria o empréstimo, a data de vencimento cai para os próximos 14 dias úteis
+    loan = Loan(regular_user, sample_book, loan_date)
+    
+    # Quando for renovar, vai cair no natal
+    loan.renew()
+
+    assert loan.due_date not in br_holidays
+
+    assert loan.due_date == datetime(2024, 1, 2)
+    
