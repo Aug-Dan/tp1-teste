@@ -44,7 +44,7 @@ class Library:
     
     def return_book(self, cpf, book_id):
         # Remove o empréstimo da tabela loans
-        self.db_manager.execute_query("DELETE FROM loans WHERE user = ? AND book_id = ?" (cpf, book_id,))
+        self.db_manager.execute_query("DELETE FROM loans WHERE user = ? AND book_id = ?", (cpf, book_id))
         
         # Atualiza o status do livro na tabela books
         self.db_manager.execute_query("UPDATE books SET borrowed = FALSE WHERE id = ?", (book_id,))
@@ -84,14 +84,12 @@ class Library:
         return self.db_manager
     
     def show_collection(self):
-
         self.db_manager.execute_query("SELECT * FROM books")
-        
         books = self.db_manager.fetchall()
         
-        if (books is None):
+        if not books:
             print("Ainda não existem livros no banco de dados")
         else:
             for book in books:
-                book.__repr__()
-            
+                print(book)  # Use print em vez de book.__repr__()
+

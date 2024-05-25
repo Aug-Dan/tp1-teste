@@ -33,6 +33,9 @@ class DatabaseManager:
 
     def fetchone(self):
         return self.cursor.fetchone()
+
+    def fetchall(self):
+        return self.cursor.fetchall()
     
     def commit(self):
         self.connection.commit()
