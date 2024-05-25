@@ -48,8 +48,6 @@ class Menu:
                     
                 case _:
                     print(Fore.RED + "Opção inválida. Por favor, tente novamente." + Style.RESET_ALL)
-                    
-                    
     
     @staticmethod
     def display_user_menu(library : Library):
@@ -138,12 +136,3 @@ class Menu:
         author = input("Digite o autor do livro: ")
         genre = input("Digite o gênero do livro: ")
         return Book(id, title, author, genre)
-        
-        
-        
-        
-        
-    
-    
-
-            
