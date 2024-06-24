@@ -19,10 +19,11 @@ class Menu:
         
         while (keep_going):
             print(Fore.BLUE + "1 - Exibir Coleção")
-            print("2 - Logar no sistema")
-            print("3 - Sair" + Style.RESET_ALL)
-            
-            option = int(input(Fore.YELLOW + "Digite uma opção (1 - 3): " + Style.RESET_ALL))
+            print("2 - Logar no Sistema")
+            print("3 - Acessar o Menu de Usuários")
+            print("4 - Acessar o Menu de Administradores")            
+            print("5 - Sair" + Style.RESET_ALL)
+            option = int(input(Fore.YELLOW + "Digite uma opção (1 - 5): " + Style.RESET_ALL))
             
             match option:
                 case 1:
@@ -43,9 +44,13 @@ class Menu:
                     except Exception as e:
                         print(f"Ocorreu um erro durante o login: {e}")
                         
-                case 3:
+                case 5:
                     keep_going = False
-                    
+                case 3: 
+                    Menu.display_user_menu(library)
+                case 4: 
+                    print("precisamos depois colocar uma senha aqui")
+                    Menu.display_admin_menu(library)
                 case _:
                     print(Fore.RED + "Opção inválida. Por favor, tente novamente." + Style.RESET_ALL)
     
