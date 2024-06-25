@@ -93,3 +93,17 @@ class Library:
             for book in books:
                 print(book)  # Use print em vez de book.__repr__()
 
+    def authenticate_user(self, email, password):
+        query = "SELECT * FROM users WHERE email = ? AND password = ?"
+        result = self.db_manager.execute_query(query, (email, password)).fetchone()
+
+        if result is None:
+            return None  # Usuário não encontrado
+
+        # Desempacotando os dados retornados do banco de dados
+        cpf, name, email, password, is_admin, current_loans_count = result
+        
+        # Criando um objeto User com os dados obtidos
+        authenticated_user = User(CPF=cpf, name=name, email=email, password=password, is_admin=is_admin)
+
+        return authenticated_user
