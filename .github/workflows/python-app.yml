@@ -25,7 +25,7 @@ jobs:
         files: ./coverage1.xml,./coverage2.xml # optional
         flags: unittests # optional
         name: codecov-umbrella # optional
-        token: $d362d077-6832-4d3b-9d42-4b850075b596 # required
+        token: d362d077-6832-4d3b-9d42-4b850075b596 # required
         verbose: true # optional (default = false)
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
@@ -52,4 +52,4 @@ jobs:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1
       with:
-        token: $d362d077-6832-4d3b-9d42-4b850075b596
+        token: d362d077-6832-4d3b-9d42-4b850075b596
