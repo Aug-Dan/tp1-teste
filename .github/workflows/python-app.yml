@@ -22,7 +22,7 @@ jobs:
     - uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true # optional (default = false)
-        files: ./coverage1.xml,./coverage2.xml # optional
+        files: ./coverage.xml # optional
         flags: unittests # optional
         name: codecov-umbrella # optional
         token: d362d077-6832-4d3b-9d42-4b850075b596 # required
